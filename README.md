@@ -6,9 +6,10 @@ students the ability to manage semesters, courses, tasks, and grades.
 ## How to Run
 
 1. Install Python 3.x
-2. Initialize the database:     python init_db.py
-3. Start the application:       python app.py
-4. Open a browser and go to:    http://127.0.0.1:5000
+2. Install dependencies:        pip install -r requirements.txt
+3. Initialize the database:     python init_db.py
+4. Start the application:       python app.py
+5. Open a browser and go to:    http://127.0.0.1:5000
 
 
 Features:

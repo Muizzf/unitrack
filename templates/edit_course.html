@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Semester</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <header class="main-header">
+        <h1>Edit Course</h1>
+    </header>
+
+    <main class="container">
+
+        <form class="add-sem" action="/updateCourse/{{ course.id }}" method="POST">
+            <input type="text" name="courseName" value="{{ course.name }}" required>
+            <button type="submit">Save</button>
+        </form>
+
+        <div class="cancel-link-container">
+            <a href="javascript:history.back()" class="cancel-link">Cancel</a>
+        </div>
+
+    </main>
+
+</body>
+</html>

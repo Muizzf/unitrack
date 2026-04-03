@@ -6,6 +6,7 @@
 <body>
   <header class="main-header">
     <h1>Course Summary - {{ course.name }}</h1>
+    <button id="darkModeToggle" style="position:absolute; top:20px; right:20px;">🌙</button>
   </header>
   
     <div class="cancel-link-container">
@@ -33,7 +34,7 @@
         <div class="stat-card highlight 
         {% if course_average >= 80 %}good
         {% elif course_average >= 60 %}ok
-        {% else %}bad
+        {% elif course_average > 0 %}bad
         {% endif %}">
           <span class="stat-label">Average</span>
           <span class="stat-value">{{ course_average | round(2) }}%</span>
@@ -77,6 +78,6 @@
 
 
   </div>
-
+  <script src="/static/dark-mode.js"></script>
 </body>
 </html>

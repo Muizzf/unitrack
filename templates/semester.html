@@ -11,6 +11,7 @@
       <a class="back-link" href="/">⬅ Home</a>
     </div>
     <h1>{{ semester.name }}</h1>
+    <button id="darkModeToggle">🌙</button>
   </header>
 
   <div class="container">
@@ -18,7 +19,7 @@
       <div class="stat-card highlight 
       {% if semester_average >= 80 %}good
       {% elif semester_average >= 60 %}ok
-      {% else %}bad
+      {% elif semester_average > 0 %}bad
       {% endif %}">
         <span class="stat-label">Semester Average</span>
         <span class="stat-value">{{ semester_average | round(2) }}%</span>
@@ -143,6 +144,7 @@
     <button type="submit">Add Task</button>
   </form>
 </div>
+<script src="/static/dark-mode.js"></script>
 </body>
 </html>
     

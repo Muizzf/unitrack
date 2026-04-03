@@ -1,13 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&display=swap'); */
+
+/* light & dark mode colors */
+:root {
+  --bg-color: white;
+  --header-bg: #35495e;
+  --header-color: #35495e;
+  --card-bg: white;
+  --text-color: #333;
+  --inverse-text: #fff;
+  --secondary-text: #777;
+  --accent-color: #2a3848;
+  --highlight-color: #e8f0ff;
+  --button-hover: #2a3848;
+  --delete-btn-bg: #e74c3c;
+  --delete-btn-color: white;
+
+  --border-color: #ccc;
+  --shadow-color: rgba(0, 0, 0, 0.08);
+  --white-color: white;
+  --table-color: white;
+  --table-hover: rgb(234, 233, 233);
+
+  --status-not-started-bg: #e0e6ed;
+  --status-not-started-color: #35495e;
+  --status-in-progress-bg: #f1c40f;
+  --status-in-progress-color: #fff;
+  --status-completed-bg: #2ecc71;
+  --status-completed-color: #fff;
+
+  --status-bad-color: rgb(206, 50, 50);
+}
+
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+header {
+  background-color: var(--header-bg);
+  color: var(--header-color);
+  padding: 20px;
+  text-align: center;
+}
+
+.stat-card,
+.semester-card,
+.task-table,
+.table-wrapper,
+.add-task-form {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border-color: var(--accent-color);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+button,
+.back-link,
+.cancel-link,
+.edit-link,
+.delete-btn,
+.add-sem button,
+.add-task-form button {
+  background-color: var(--accent-color);
+  color: var(--header-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.add-sem button:hover,
+.add-task-form button:hover,
+.back-link:hover,
+.cancel-link:hover,
+.edit-link:hover,
+.delete-btn:hover {
+  background-color: var(--button-hover);
+}
+
+.delete-btn {
+  background-color: var(--delete-btn-bg);
+  color: var(--delete-btn-color);
+}
+
+.status-badge.not-started {
+  background-color: var(--status-not-started-bg);
+  color: var(--status-not-started-color);
+}
+
+.status-badge.in-progress {
+  background-color: var(--status-in-progress-bg);
+  color: var(--status-in-progress-color);
+}
+
+.status-badge.completed {
+  background-color: var(--status-completed-bg);
+  color: var(--status-completed-color);
+}
+
+input,
+select,
+textarea {
+  border: 1px solid var(--accent-color);
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* dark mode */
+body.dark-mode {
+  --bg-color: #232323;
+  --header-bg: #111;
+  --header-color: rgb(195, 192, 192);
+  --card-bg: #2c2c2c;
+  --text-color: #e4e2e2;
+  --secondary-text: #333;
+  --inverse-text: #333;
+  --accent-color: #444;
+  --highlight-color: #333;
+  --button-hover: #2c2b2b;
+  --delete-btn-bg: #c0392b;
+  --delete-btn-color: #fff;
+
+  --border-color: #555;
+  --shadow-color: rgba(255, 255, 255, 0.1);
+  --white-color: rgb(195, 192, 192);
+  --table-color: rgb(21, 21, 21);
+  --table-hover: rgb(33, 32, 32);
+
+  --status-not-started-bg: #444;
+  --status-not-started-color: #ddd;
+  --status-in-progress-bg: #a88a14;
+  --status-in-progress-color: #000;
+  --status-completed-bg: #0d7e3c;
+  --status-completed-color: #fff;
+
+  --status-bad-color: rgb(140, 16, 16);
+}
+
+
+body {
+  /* font-family: Arial, sans-serif; */
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--bg-color);
+  /* font-family: 'Nunito', sans-serif; */
+  /* font-family: 'Quicksand', sans-serif; */
+    /* font-family: 'Fredoka', sans-serif; */ 
+  /* font-family: 'Comfortaa', sans-serif; */
+  /* font-family: 'Baloo 2', cursive; */
+
+  color: var(--text-color);
   margin: 0;
   padding: 0;
 }
 
 header {
-  background-color: #35495e;
-  color: white;
+  background-color: var(--header-bg);
+  color: var(--header-color);
   padding: 20px;
   text-align: center;
 }
@@ -27,14 +181,13 @@ header {
   padding: 12px 10px;
   font-size: 16px;
   border-radius: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-color);
   outline: none;
   transition: all 0.2s ease;
 }
 
 .add-sem input:focus {
-  border-color: #35495e;
-  box-shadow: 0 0 0 3px rgba(53, 73, 94, 0.15);
+  box-shadow: 0 0 0 3px var(--shadow-color);
 }
 
 .add-sem button {
@@ -42,14 +195,14 @@ header {
   font-size: 14px;
   border-radius: 8px;
   border: none;
-  background-color: #35495e;
-  color: white;
+  background-color: var(--header-bg);
+  color: var(--white-color);
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .add-sem button:hover {
-  background-color: #2a3848;
+  background-color: var(--button-hover);
 }
 .add-sem button:active {
   transform: scale(0.97);
@@ -59,8 +212,9 @@ header {
 .add-task-form {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
+  background-color: var(--bg-color);
   gap: 12px;
-  max-width: 1000px;
+  max-width: 1100px;
   margin: 0 auto;
   align-items: center;
 }
@@ -69,7 +223,7 @@ select {
   padding: 10px 10px;
   font-size: 16px;
   border-radius: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-color);
 }
 
 
@@ -77,10 +231,11 @@ select {
 .add-task-form select,
 .add-task-form textarea,
 .add-task-form button {
+  font-family: 'Poppins', sans-serif;
   padding: 12px 10px;
   font-size: 16px;
   border-radius: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-color);
   width: 100%;
   box-sizing: border-box;
 }
@@ -88,15 +243,15 @@ select {
 .add-task-form button {
   grid-column: span 12;
   margin-top: 8px;
-  background-color: #35495e;
-  color: white;
+  background-color: var(--header-bg);
+  color: var(--white-color);
   border: none;
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .add-task-form button:hover {
-  background-color: #2a3848;
+  background-color: var(--button-hover);
 }
 
 .add-task-form button:active {
@@ -135,18 +290,19 @@ select {
   left: 30px;
   z-index: 1000;
 
-  background-color: #2a3848;
-  color: white;
+  background-color: var(--header-bg);
+  color: var(--white-color);
   text-decoration: none;
   padding: 10px 12px;
   border-radius: 6px;
   font-size: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
 
   transition: background-color 0.2s ease;
 }
 
 .back-link:hover {
-  background-color: #1f2a36;
+  background-color: var(--button-hover);
 }
 
 
@@ -161,8 +317,8 @@ select {
 }
 
 .cancel-link {
-    background-color: #e74c3c;
-    color: white;
+    background-color: var(--delete-btn-bg);
+    color: var(--white-color);
     border: none;
     padding: 10px 12px;
     border-radius: 6px;
@@ -175,7 +331,7 @@ select {
 }
 
 .cancel-link:hover {
-    background-color: #c0392b;
+    background-color: #a3281b;
 }
 
 .cancel-link:active {
@@ -185,21 +341,21 @@ select {
 
 .main-header {
   background-color: #35495e;
-  color: white;
+  color: var(--white-color);
   padding: 20px 20px;
   text-align: center;
   position: relative;
 }
 
 .container {
-  max-width: 1000px;
+  max-width: 1100px;
   margin: 40px auto;
   padding: 0 20px;
 }
 
 .section-header h2 {
   margin-bottom: 20px;
-  color: #35495e;
+  color: var(--header-color);
   text-align: center;
 }
 
@@ -215,10 +371,10 @@ select {
 }
 
 .semester-card {
-  background: white;
+  background: var(--white-color);
   padding: 15px 25px;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px var(--shadow-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -227,7 +383,7 @@ select {
 
 .semester-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 6px 7px var(--shadow-color);
 }
 
 .semester-name {
@@ -248,18 +404,20 @@ select {
 }
 
 .edit-link {
-  color: #35495e;
+  color: #557393;
+  background-color: transparent;
   text-decoration: none;
   font-weight: 500;
 }
 
 .edit-link:hover {
   text-decoration: underline;
+  background-color: transparent;
 }
 
 .delete-btn {
-  background-color: #e74c3c;
-  color: white;
+  background-color: var(--delete-btn-bg);
+  color: var(--white-color);
   border: none;
   padding: 8px 12px;
   border-radius: 6px;
@@ -270,7 +428,7 @@ select {
 }
 
 .delete-btn:hover {
-  background-color: #c0392b;
+  background-color: #a3281b;
 }
 
 .delete-btn:active {
@@ -305,18 +463,19 @@ select {
   height: 30px;
   padding: 5px 10px;
   text-align: left;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
   font-size: 14px;
+  color: var(--text-color);
 }
 
 .task-table th {
-  background-color: #f7f9fb;
-  color: #35495e;
+  background-color: var(--table-color);
+  color: var(--header-color);
   font-weight: 600;
 }
 
 .task-table tr:hover {
-  background-color: #f9fafb;
+  background-color: var(--table-hover);
 }
 
 .task-title {
@@ -358,18 +517,18 @@ select {
 }
 
 .status-badge.not-started {
-  background-color: #e0e6ed;
-  color: #35495e;
+  background-color: var(--status-not-started-bg);
+  color: var(--not-started-color);
 }
 
 .status-badge.in-progress {
-  background-color: #f1c40f;
-  color: #fff;
+  background-color: var(--status-in-progress-bg);
+  color: var(--in-progress-color);
 }
 
 .status-badge.completed {
-  background-color: #2ecc71;
-  color: #fff;
+  background-color: var(--status-completed-bg);
+  color: var(--completed-color);
 }
 
 
@@ -379,13 +538,13 @@ select {
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #ccc;
-  font-family: inherit;
+  /* font-family: inherit; */
   resize: vertical;
 }
 
 
 h2 {
-  color: #35495e;
+  color: var(--header-color);
   margin-bottom: 10px;
 }
 
@@ -399,16 +558,16 @@ p {
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 15px;
+  gap: 35px;
   margin: 20px 0;
 }
 
 .stat-card {
-  background: #f8f9fb;
-  border-radius: 12px;
+  background: var(--white-color);
+  border-radius: 15px;
   padding: 15px;
   text-align: center;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 6px var(--shadow-color);
   transition: transform 0.15s ease;
 }
 
@@ -419,47 +578,75 @@ p {
 .stat-label {
   display: block;
   font-size: 0.9rem;
-  color: #777;
+  color: #333;
+  font-weight: bold;
   margin-bottom: 5px;
 }
 
 .stat-value {
-  font-size: 1.5rem;
+  font-size: 1.5rem;  
   font-weight: bold;
   color: #333;
 }
 
-.stat-card.highlight {
-  background: #e8f0ff;
-  border: 1px solid #c7d7ff;
-}
-
 .stat-card.good { 
-  background: #e6f9ec; 
-  border: 1px solid #b2e2c4;
+  background: var(--status-completed-bg); 
+  border: 1px solid var(--border-color);
 }
 .stat-card.good .stat-value {
-  color: #2e7d32;
-  
+  color: var(--status-completed-color);
 }
 
 .stat-card.ok { 
-  background: #fff8e1; 
-  border: 1px solid #ffd700;
+  background: var(--status-in-progress-bg); 
+  border: 1px solid var(--border-color);
 }
 .stat-card.ok .stat-value {
-  color: #ff8c00;
+  color: var(--status-in-progress-color);
 }
 
 .stat-card.bad { 
-  background: #fdecea; 
-  border: 1px solid #f5c6cb;
+  background: var(--status-bad-color); 
+  border: 1px solid var(--border-color);
 }
 .stat-card.bad .stat-value {
-  color: #c82333;
+ color: var(--white-color)
 }
-/*
-.stat-card.highlight .stat-value {
-  color: #2a5bd7;
+
+
+
+#darkModeToggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+
+  background-color: var(--header-bg);
+  color: var(--header-color);
+  border: none;
+
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 16px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+
+  transition: background-color 0.2s ease, transform 0.1s ease;
 }
-*/
+
+#darkModeToggle:hover {
+  background-color: var(--button-hover);
+}
+
+#darkModeToggle:active {
+  transform: scale(0.7);
+}

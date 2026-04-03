@@ -5,8 +5,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body>
-    <header class="main-header">
+    <header class="main-header" >
         <h1>UniTrack</h1>
+          <button id="darkModeToggle" style="position:absolute; top:20px; right:20px;">🌙</button>
         <p>Select a semester to view your courses and tasks</p>
     </header>
 
@@ -47,6 +48,6 @@
         <button type="submit">Add Semester</button>
       </form>
     </div>
-
+    <script src="/static/dark-mode.js"></script>
   </body>
 </html>

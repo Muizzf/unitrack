@@ -186,13 +186,13 @@ select {
 .main-header {
   background-color: #35495e;
   color: white;
-  padding: 30px 20px;
+  padding: 20px 20px;
   text-align: center;
   position: relative;
 }
 
 .container {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 40px auto;
   padding: 0 20px;
 }
@@ -216,7 +216,7 @@ select {
 
 .semester-card {
   background: white;
-  padding: 20px 25px;
+  padding: 15px 25px;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   display: flex;
@@ -303,7 +303,7 @@ select {
 .task-table th,
 .task-table td {
   height: 30px;
-  padding: 8px 14px;
+  padding: 5px 10px;
   text-align: left;
   border-bottom: 1px solid #eee;
   font-size: 14px;
@@ -384,8 +384,6 @@ select {
 }
 
 
-
-
 h2 {
   color: #35495e;
   margin-bottom: 10px;
@@ -396,3 +394,72 @@ p {
 }
 
 
+
+/* statistics styling */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.stat-card {
+  background: #f8f9fb;
+  border-radius: 12px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  transition: transform 0.15s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.9rem;
+  color: #777;
+  margin-bottom: 5px;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.stat-card.highlight {
+  background: #e8f0ff;
+  border: 1px solid #c7d7ff;
+}
+
+.stat-card.good { 
+  background: #e6f9ec; 
+  border: 1px solid #b2e2c4;
+}
+.stat-card.good .stat-value {
+  color: #2e7d32;
+  
+}
+
+.stat-card.ok { 
+  background: #fff8e1; 
+  border: 1px solid #ffd700;
+}
+.stat-card.ok .stat-value {
+  color: #ff8c00;
+}
+
+.stat-card.bad { 
+  background: #fdecea; 
+  border: 1px solid #f5c6cb;
+}
+.stat-card.bad .stat-value {
+  color: #c82333;
+}
+/*
+.stat-card.highlight .stat-value {
+  color: #2a5bd7;
+}
+*/

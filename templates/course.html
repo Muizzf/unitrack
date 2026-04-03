@@ -4,22 +4,41 @@
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-
+  <header class="main-header">
+    <h1>Course Summary - {{ course.name }}</h1>
+  </header>
+  
     <div class="cancel-link-container">
       <a class="back-link" href="javascript:history.back()">⬅ Back</a>
     </div>
     
     <div class="container">
-      <h1>Course Summary</h1>
-      <ul>
-          <li>Percentage Earned: {{ percentage_earned | round(2) }}%</li>
-          <li>Percentage Lost: {{ percentage_lost | round(2) }}%</li>
-          <li>Available Percentage: {{ percentage_available | round(2) }}%</li>
-          <li>Course Average: {{ course_average | round(2) }}%</li>
-      </ul>
+      <h2>{{course.name}} Course Statistics</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-label">Earned</span>
+          <span class="stat-value">{{ percentage_earned | round(2) }}%</span>
+        </div>
 
+        <div class="stat-card">
+          <span class="stat-label">Lost</span>
+          <span class="stat-value">{{ percentage_lost | round(2) }}%</span>
+        </div>
 
-    <h1>Tasks for {{ course.name }}</h1>
+        <div class="stat-card">
+          <span class="stat-label">Available</span>
+          <span class="stat-value">{{ percentage_available | round(2) }}%</span>
+        </div>
+
+        <div class="stat-card highlight 
+        {% if course_average >= 80 %}good
+        {% elif course_average >= 60 %}ok
+        {% else %}bad
+        {% endif %}">
+          <span class="stat-label">Average</span>
+          <span class="stat-value">{{ course_average | round(2) }}%</span>
+        </div>
+      </div>
 
     <h2>Tasks</h2>
     <div class="table-wrapper">

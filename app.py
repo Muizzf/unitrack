@@ -48,9 +48,9 @@ def semester_page(semester_id):
         "course": "courses.name",
         "status": """
             CASE tasks.status
-                WHEN 'Not Started' THEN 1
+                WHEN 'Completed' THEN 1
                 WHEN 'In Progress' THEN 2
-                WHEN 'Completed' THEN 3
+                WHEN 'Not Started' THEN 3
             END
         """
     }.get(sort, "due_date")
@@ -64,12 +64,35 @@ def semester_page(semester_id):
         ORDER BY {order_by}
     """, (semester_id,)).fetchall()
 
+    course_totals = {}
+    for t in tasks:
+        course_id = t["course_id"]
+        
+        # Convert weight safely
+        weight = float(t["weight"]) if t["weight"] not in (None, '') else 0
+        
+        # Convert grade safely
+        grade = float(t["grade"]) if t["grade"] not in (None, '') else None
+
+        if grade is not None:
+            if course_id not in course_totals:
+                course_totals[course_id] = {"earned": 0, "weight": 0}
+            course_totals[course_id]["earned"] += (grade / 100) * weight
+            course_totals[course_id]["weight"] += weight
+
+    course_averages = []
+    for totals in course_totals.values():
+        if totals["weight"] > 0:
+            course_averages.append(totals["earned"] / totals["weight"] * 100)
+
+    semester_average = round(sum(course_averages) / len(course_averages), 2) if course_averages else 0
 
     return render_template(
         "semester.html",
         semester=semester,
         courses=courses,
-        tasks=tasks
+        tasks=tasks,
+        semester_average=semester_average
     )
 
 
@@ -122,7 +145,7 @@ def add_task(semester_id):
     conn.execute("""
         INSERT INTO tasks 
         (course_id, title, due_date, weight, status, grade, notes)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        VALUES (    , ?, ?, ?, ?, ?, ?)
     """, (course_id, title, due_date, weight, status, grade, notes))
 
     conn.commit()

@@ -2,7 +2,7 @@
 
 UniTrack is a full-stack web application built with **Flask** and **SQLite** that helps students manage semesters, courses, tasks, and grades. Track your academic progress easily with a clean, intuitive interface.
 
----
+
 
 ## Features
 
@@ -12,14 +12,14 @@ UniTrack is a full-stack web application built with **Flask** and **SQLite** tha
 - REST-style routes with proper **GET/POST** HTTP methods
 - Dark mode toggle for a more comfortable viewing experience
 
----
+
 
 ## Technologies Used
 - **Python** (Flask 3.0.0)  
 - **HTML / CSS**  
 - **SQLite**  
 
----
+
 
 ## How to Run
 

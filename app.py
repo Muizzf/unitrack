@@ -145,7 +145,7 @@ def add_task(semester_id):
     conn.execute("""
         INSERT INTO tasks 
         (course_id, title, due_date, weight, status, grade, notes)
-        VALUES (    , ?, ?, ?, ?, ?, ?)
+        VALUES ( ?, ?, ?, ?, ?, ?, ?)
     """, (course_id, title, due_date, weight, status, grade, notes))
 
     conn.commit()

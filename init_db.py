@@ -3,7 +3,7 @@ import sqlite3        #import sqlite3 module to interact with SQLite databases
 conn = sqlite3.connect("database.db")   #connect to the database (or create it if it doesn't exist)
 cursor = conn.cursor()                  #create a cursor object to execute SQL commands
 
-#Create a table named 'courses' with columns 'id' and 'name'. SQL command to create the table if it doesn't exist
+#Create a table named 'semesters' with columns 'id' and 'name'. SQL command to create the table if it doesn't exist
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS semesters (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

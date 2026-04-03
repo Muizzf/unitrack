@@ -1,23 +1,38 @@
-UniTrack – An Academic Progress Tracker
+# UniTrack – An Academic Progress Tracker
 
-A full-stack web application built using Flask and SQLite that gives
-students the ability to manage semesters, courses, tasks, and grades.
+UniTrack is a full-stack web application built with **Flask** and **SQLite** that helps students manage semesters, courses, tasks, and grades. Track your academic progress easily with a clean, intuitive interface.
+
+---
+
+## Features
+
+- Manage **semesters**, **courses**, and **tasks** (full CRUD functionality)
+- Real-time **grade calculations** (earned, remaining, course average)
+- Sort tasks by **due date**, **course**, or **status**
+- REST-style routes with proper **GET/POST** HTTP methods
+- Dark mode toggle for a more comfortable viewing experience
+
+---
+
+## Technologies Used
+- **Python** (Flask 3.0.0)  
+- **HTML / CSS**  
+- **SQLite**  
+
+---
 
 ## How to Run
 
-1. Install Python 3.x
-2. Install dependencies:        pip install -r requirements.txt
-3. Initialize the database:     python init_db.py
-4. Start the application:       python app.py
-5. Open a browser and go to:    http://127.0.0.1:5000
+```bash
+# 1. Install Python 3.x
 
+# 2. Install dependencies
+pip install -r requirements.txt
 
-Features:
-- Semester, course, and task management
-- Grade calculations (earned, remaining, course average)
-- Task sorting by due date and course
+# 3. Initialize the database
+python init_db.py
 
-Technologies Used:
-- Python (Flask)
-- HTML/CSS
-- SQLite
+# 4. Start the application
+python app.py
+
+# 5. Open a browser and go to: `http://127.0.0.1:5000`

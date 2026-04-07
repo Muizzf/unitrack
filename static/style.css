@@ -561,6 +561,10 @@ p {
   gap: 35px;
   margin: 20px 0;
 }
+.stats-grid.sem-avg {
+  max-width: 500px;
+  margin: 20px auto;
+}
 
 .stat-card {
   background: var(--white-color);
@@ -611,6 +615,72 @@ p {
 }
 .stat-card.bad .stat-value {
  color: var(--white-color)
+}
+
+
+
+.upload-syllabus-form {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 12px;
+  max-width: 710px;
+  margin: 20px auto 40px auto;
+  padding: 20px;
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px var(--shadow-color);
+  border: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.upload-syllabus-form select,
+.upload-syllabus-form input[type="file"] {
+  grid-column: span 4;
+  padding: 12px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  font-size: 16px;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.upload-syllabus-form select:focus,
+.upload-syllabus-form input[type="file"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--shadow-color);
+}
+
+.upload-syllabus-form input[type="submit"] {
+  grid-column: span 4;
+  padding: 12px 18px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: solid 1px var(--border-color);
+  background-color: var(--header-bg);
+  color: var(--white-color);
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.upload-syllabus-form input[type="submit"]:hover {
+  background-color: var(--button-hover);
+}
+
+.upload-syllabus-form input[type="submit"]:active {
+  transform: scale(0.97);
+}
+
+@media (max-width: 768px) {
+  .upload-syllabus-form {
+    grid-template-columns: 1fr;
+  }
+  .upload-syllabus-form select,
+  .upload-syllabus-form input[type="file"],
+  .upload-syllabus-form input[type="submit"] {
+    grid-column: span 12;
+  }
 }
 
 

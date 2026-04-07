@@ -335,6 +335,46 @@ def course_page(course_id):
     )
 
 
+from werkzeug.utils import secure_filename
+import os
+from syllabus_parser import extract_tasks_from_pdf
+
+UPLOAD_FOLDER = "uploads"
+ALLOWED_EXTENSIONS = {"pdf"}
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route("/uploadSyllabus", methods=["POST"])
+def upload_syllabus():
+    course_id = request.form["course_id"]
+    file = request.files["file"]
+
+    if file.filename == "":
+        return "No selected file"
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+        os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
+        file.save(filepath)
+
+        tasks = extract_tasks_from_pdf(filepath)
+
+        conn = get_db()
+        for t in tasks:
+            conn.execute("""
+                INSERT INTO tasks
+                (course_id, title, due_date, weight, status, grade, notes)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            """, (course_id, t["title"], t["due_date"] if t["due_date"] != "Unknown" else "",
+                  t["weight"], "Not Started", "", ""))
+        conn.commit()
+
+        course = conn.execute("SELECT semester_id FROM courses WHERE id = ?", (course_id,)).fetchone()
+        return redirect(f"/semester/{course['semester_id']}")
+
 
 
 

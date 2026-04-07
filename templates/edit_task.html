@@ -28,7 +28,7 @@
 
             <input class="field-small" type="date" name="due_date" value="{{ task.due_date }}">
 
-            <input class="field-tiny" type="number" step="0.1" min="0" max="100" name="weight" value="{{ task.weight }}" placeholder="Weight %">
+            <input class="field-tiny" type="number" step="0.01" min="0" max="100" name="weight" value="{{ task.weight }}" placeholder="Weight %">
 
             <select class="field-tiny" name="status">
                 <option {% if task.status == "Not Started" %}selected{% endif %}>Not Started</option>
@@ -37,7 +37,7 @@
             </select>
 
 
-            <input class="field-tiny" type="number" step="0.1" min="0" max="100" name="grade" value="{{ task.grade }}" placeholder="Grade">
+            <input class="field-tiny" type="number" step="0.01" min="0" max="100" name="grade" value="{{ task.grade }}" placeholder="Grade">
 
             <textarea class="field-notes" name="notes" placeholder="Notes">{{ task.notes }}</textarea>
 

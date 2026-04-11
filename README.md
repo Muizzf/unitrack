@@ -39,3 +39,9 @@ python app.py
 
 # 5. Open a browser and go to: `http://127.0.0.1:5000`
 ```
+
+## Future Improvemewnts
+- Deployment
+- Improve PDF parsing accuracy for complex formats
+- Calender view for tasks
+- Enable drag-and-drop reordering of semesters and courses

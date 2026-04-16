@@ -68,7 +68,7 @@
                 {{ t.status }}
               </span>
             </td>
-            <td>{{ t.grade }}</td>
+            <td>{{ t.grade or "" }}</td>
             <td class="task-notes">{{ t.notes }}</td>
           </tr>
           {% endfor %}

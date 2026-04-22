@@ -1,28 +1,112 @@
 from flask import Flask, render_template, request, redirect 
 
 import os
-import sqlite3             #import to interact with SQLite databases
 
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-app = Flask(__name__)       #create the web server
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
 
-app.config["UPLOAD_FOLDER"] = "uploads" #directory to store uploaded files
+app = Flask(__name__)       #create the web server
+app.secret_key = os.environ.get("SECRET_KEY", "dev")
 
 def get_db():
     conn = psycopg2.connect(
-        os.environ.get("DATABASE_URL")
+        os.environ["DATABASE_URL"],
+        sslmode="require"
     )
     return conn
+
+login_manager = LoginManager() #initialize flask login
+login_manager.init_app(app)
+login_manager.login_view = "login"
+
+app.config["UPLOAD_FOLDER"] = "uploads" #directory to store uploaded files
+
+class User(UserMixin):
+    pass
+
+@login_manager.user_loader
+def load_user(user_id):
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("SELECT id, email FROM users WHERE id = %s", (user_id,))
+    row = cur.fetchone()
+    cur.close()
+    conn.close()
+
+    if row:
+        user = User()
+        user.id = row[0]
+        return user
+
+    return None
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+
+        hashed = generate_password_hash(password)
+
+        conn = get_db()
+        cur = conn.cursor()
+
+        cur.execute(
+            "INSERT INTO users (email, password_hash) VALUES (%s, %s)",
+            (email, hashed)
+        )
+
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        return redirect("/login")
+
+    return render_template("register.html")
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+
+        conn = get_db()
+        cur = conn.cursor()
+
+        cur.execute("SELECT id, password_hash FROM users WHERE email = %s", (email,))
+        user = cur.fetchone()
+
+        cur.close()
+        conn.close()
+
+        if user and check_password_hash(user[1], password):
+            u = User()
+            u.id = user[0]
+            login_user(u)
+            return redirect("/")
+
+        return "Invalid login"
+
+    return render_template("login.html")
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect("/login")
+
 
 
 #routes
 @app.route("/")             #define a route to homepage ("/") (index.html)
+@login_required
 def home():
     conn = get_db()         #opens database connection
     curr = conn.cursor(cursor_factory=RealDictCursor)
-    curr.execute("SELECT * FROM semesters")
+    curr.execute("SELECT * FROM semesters wHERE user_id = %s", (current_user.id,))
     semesters = curr.fetchall()
 
     curr.close()
@@ -31,13 +115,14 @@ def home():
     return render_template("index.html", semesters=semesters) 
 
 @app.route("/addSemester", methods=["POST"])
+@login_required
 def add_semester():
     name = request.form["semesterName"]
 
     conn = get_db()
     cur = conn.cursor()
 
-    cur.execute("INSERT INTO semesters (name) VALUES (%s)", (name,))
+    cur.execute("INSERT INTO semesters (name, user_id) VALUES (%s, %s)", (name, current_user.id))
     conn.commit()
 
     cur.close()
@@ -46,14 +131,15 @@ def add_semester():
     return redirect("/")
 
 @app.route("/semester/<int:semester_id>")
+@login_required
 def semester_page(semester_id):
     conn = get_db()
     cur = conn.cursor(cursor_factory=RealDictCursor)
 
-    cur.execute("SELECT * FROM semesters WHERE id = %s", (semester_id,))
+    cur.execute("SELECT * FROM semesters WHERE id = %s AND user_id = %s", (semester_id, current_user.id))
     semester = cur.fetchone()
 
-    cur.execute("SELECT * FROM courses WHERE semester_id = %s", (semester_id,))
+    cur.execute("SELECT * FROM courses WHERE semester_id = %s AND user_id = %s", (semester_id, current_user.id))
     courses = cur.fetchall()
 
     sort = request.args.get("sort", "due")   # Default to due date
@@ -75,9 +161,9 @@ def semester_page(semester_id):
         SELECT tasks.*, courses.name AS course_name
         FROM tasks
         JOIN courses ON tasks.course_id = courses.id
-        WHERE courses.semester_id = %s
+        WHERE courses.semester_id = %s AND courses.user_id = %s
         ORDER BY {order_by}
-    """, (semester_id,))
+    """, (semester_id, current_user.id))
     tasks = cur.fetchall()
 
     cur.close()
@@ -116,11 +202,12 @@ def semester_page(semester_id):
 
 
 @app.route("/editSemester/<int:semester_id>")
+@login_required
 def edit_semester_page(semester_id):
     conn = get_db()
     cur = conn.cursor(cursor_factory=RealDictCursor)
 
-    cur.execute("SELECT * FROM semesters WHERE id = %s", (semester_id,))
+    cur.execute("SELECT * FROM semesters WHERE id = %s AND user_id = %s", (semester_id, current_user.id))
     semester = cur.fetchone()
 
     cur.close()
@@ -129,6 +216,7 @@ def edit_semester_page(semester_id):
     return render_template("edit_semester.html", semester=semester)
 
 @app.route("/updateSemester/<int:semester_id>", methods=["POST"])
+@login_required
 def update_semester(semester_id):
     new_name = request.form["semesterName"]
 
@@ -136,8 +224,8 @@ def update_semester(semester_id):
     cur = conn.cursor()
 
     cur.execute(
-        "UPDATE semesters SET name = %s WHERE id = %s",
-        (new_name, semester_id)
+        "UPDATE semesters SET name = %s WHERE id = %s AND user_id = %s",
+        (new_name, semester_id, current_user.id)
     )
     conn.commit()
 
@@ -147,11 +235,12 @@ def update_semester(semester_id):
     return redirect("/")
 
 @app.route("/deleteSemester/<int:semester_id>", methods=["POST"])
+@login_required
 def delete_semester(semester_id):
     conn = get_db()
     cur = conn.cursor()
 
-    cur.execute("DELETE FROM semesters WHERE id = %s", (semester_id,))
+    cur.execute("DELETE FROM semesters WHERE id = %s AND user_id = %s", (semester_id, current_user.id))
     conn.commit()
 
     cur.close()
@@ -162,6 +251,7 @@ def delete_semester(semester_id):
 
 
 @app.route("/addTask/<int:semester_id>", methods=["POST"])
+@login_required
 def add_task(semester_id):
     course_id = request.form["course_id"]
     title = request.form["title"]
@@ -176,9 +266,9 @@ def add_task(semester_id):
 
     cur.execute("""
         INSERT INTO tasks 
-        (course_id, title, due_date, weight, status, grade, notes)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
-    """, (course_id, title, due_date, weight, status, grade, notes))
+        (course_id, title, due_date, weight, status, grade, notes, user_id)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+    """, (course_id, title, due_date, weight, status, grade, notes, current_user.id))
 
     conn.commit()
 
@@ -189,11 +279,12 @@ def add_task(semester_id):
 
 
 @app.route("/deleteTask/<int:task_id>", methods=["POST"])
+@login_required
 def delete_task(task_id):
     conn = get_db()
     cur = conn.cursor()
 
-    cur.execute("DELETE FROM tasks WHERE id = %s", (task_id,))
+    cur.execute("DELETE FROM tasks WHERE id = %s AND user_id = %s", (task_id, current_user.id))
     conn.commit()
 
     cur.close()
@@ -203,6 +294,7 @@ def delete_task(task_id):
 
 
 @app.route("/addCourse/<int:semester_id>", methods=["POST"])
+@login_required
 def add_course(semester_id):
     name = request.form["courseName"]
 
@@ -210,8 +302,8 @@ def add_course(semester_id):
     cur = conn.cursor()
 
     cur.execute(
-        "INSERT INTO courses (name, semester_id) VALUES (%s, %s)",
-        (name, semester_id)
+        "INSERT INTO courses (name, semester_id, user_id) VALUES (%s, %s, %s)",
+        (name, semester_id, current_user.id)
     )
     conn.commit()
 
@@ -222,12 +314,13 @@ def add_course(semester_id):
 
 
 @app.route("/deleteCourse/<int:course_id>", methods=["POST"])
+@login_required
 def delete_course(course_id):
     conn = get_db()
     cur = conn.cursor()
 
-    cur.execute("DELETE FROM tasks WHERE course_id = %s", (course_id,))
-    cur.execute("DELETE FROM courses WHERE id = %s", (course_id,))
+    cur.execute("DELETE FROM tasks WHERE course_id = %s AND user_id = %s", (course_id, current_user.id))
+    cur.execute("DELETE FROM courses WHERE id = %s AND user_id = %s", (course_id, current_user.id))
 
     conn.commit()
 
@@ -237,11 +330,12 @@ def delete_course(course_id):
     return redirect(request.referrer)
 
 @app.route("/editCourse/<int:course_id>")
+@login_required
 def edit_course(course_id):
     conn = get_db()
     cur = conn.cursor(cursor_factory=RealDictCursor)
 
-    cur.execute("SELECT * FROM courses WHERE id = %s", (course_id,))
+    cur.execute("SELECT * FROM courses WHERE id = %s AND user_id = %s", (course_id, current_user.id))
     course = cur.fetchone()
 
     cur.close()
@@ -250,19 +344,20 @@ def edit_course(course_id):
     return render_template("edit_course.html", course=course)
 
 @app.route("/updateCourse/<int:course_id>", methods=["POST"])
+@login_required
 def update_course(course_id):
     conn = get_db()
     cur = conn.cursor(cursor_factory=RealDictCursor)
 
-    cur.execute("SELECT semester_id FROM courses WHERE id = %s", (course_id,))
+    cur.execute("SELECT semester_id FROM courses WHERE id = %s AND user_id = %s", (course_id, current_user.id))
     course = cur.fetchone()
     semester_id = course["semester_id"]
 
     name = request.form["courseName"]
 
     cur.execute(
-        "UPDATE courses SET name = %s WHERE id = %s",
-        (name, course_id)
+        "UPDATE courses SET name = %s WHERE id = %s AND user_id = %s",
+        (name, course_id, current_user.id)
     )
     conn.commit()
 
@@ -273,6 +368,7 @@ def update_course(course_id):
 
 
 @app.route("/editTask/<int:task_id>")
+@login_required
 def edit_task(task_id):
     conn = get_db()
     cur = conn.cursor(cursor_factory=RealDictCursor)
@@ -281,13 +377,13 @@ def edit_task(task_id):
         SELECT tasks.*, courses.semester_id
         FROM tasks
         JOIN courses ON tasks.course_id = courses.id
-        WHERE tasks.id = %s
-    """, (task_id,))
+        WHERE tasks.id = %s AND tasks.user_id = %s
+    """, (task_id, current_user.id))
     task = cur.fetchone()
 
     cur.execute(
-        "SELECT * FROM courses WHERE semester_id = %s",
-        (task["semester_id"],)
+        "SELECT * FROM courses WHERE semester_id = %s AND user_id = %s",
+        (task["semester_id"], current_user.id)
     )
     courses = cur.fetchall()
 
@@ -297,6 +393,7 @@ def edit_task(task_id):
     return render_template("edit_task.html", task=task, courses=courses)
 
 @app.route("/updateTask/<int:task_id>", methods=["POST"])
+@login_required
 def update_task(task_id):
     conn = get_db()
     cur = conn.cursor(cursor_factory=RealDictCursor)
@@ -305,8 +402,8 @@ def update_task(task_id):
         SELECT courses.semester_id
         FROM tasks
         JOIN courses ON tasks.course_id = courses.id
-        WHERE tasks.id = %s
-    """, (task_id,))
+        WHERE tasks.id = %s AND tasks.user_id = %s
+    """, (task_id, current_user.id))
     row = cur.fetchone()
 
     semester_id = row["semester_id"]
@@ -321,8 +418,8 @@ def update_task(task_id):
     cur.execute("""
         UPDATE tasks
         SET title = %s, due_date = %s, weight = %s, status = %s, grade = %s, notes = %s
-        WHERE id = %s
-    """, (title, due_date, weight, status, grade, notes, task_id))
+        WHERE id = %s AND user_id = %s
+    """, (title, due_date, weight, status, grade, notes, task_id, current_user.id))
 
     conn.commit()
 
@@ -333,23 +430,24 @@ def update_task(task_id):
 
 
 @app.route("/course/<int:course_id>")
+@login_required
 def course_page(course_id):
     conn = get_db()
     cur = conn.cursor(cursor_factory=RealDictCursor)
 
     # Get course info
     cur.execute(
-        "SELECT * FROM courses WHERE id = %s",
-        (course_id,)
+        "SELECT * FROM courses WHERE id = %s AND user_id = %s",
+        (course_id, current_user.id)
     )
     course = cur.fetchone()
 
     # Get all tasks for this course
     cur.execute("""
         SELECT * FROM tasks
-        WHERE course_id = %s
+        WHERE course_id = %s AND user_id = %s
         ORDER BY due_date ASC
-    """, (course_id,))
+    """, (course_id, current_user.id))
     tasks = cur.fetchall()
 
     cur.close()
@@ -397,6 +495,7 @@ def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route("/uploadSyllabus", methods=["POST"])
+@login_required
 def upload_syllabus():
     course_id = request.form["course_id"]
     file = request.files["file"]
@@ -419,8 +518,8 @@ def upload_syllabus():
         for t in tasks:
             cur.execute("""
                 INSERT INTO tasks
-                (course_id, title, due_date, weight, status, grade, notes)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                (course_id, title, due_date, weight, status, grade, notes, user_id)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             """, (
                 course_id,
                 t["title"],
@@ -428,15 +527,16 @@ def upload_syllabus():
                 t["weight"],
                 "Not Started",
                 None,
-                ""
+                "",
+                current_user.id
             ))
 
         conn.commit()
 
         # Get semester_id for redirect
         cur.execute(
-            "SELECT semester_id FROM courses WHERE id = %s",
-            (course_id,)
+            "SELECT semester_id FROM courses WHERE id = %s AND user_id = %s",
+            (course_id, current_user.id)
         )
         course = cur.fetchone()
         semester_id = course["semester_id"]

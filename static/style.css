@@ -5,7 +5,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&display=swap'); */
 
-/* light & dark mode colors */
+/* light & dark mode colors #596063 */
 :root {
   --bg-color: white;
   --header-bg: #35495e;
@@ -719,4 +719,34 @@ p {
 
 #darkModeToggle:active {
   transform: scale(0.7);
+}
+
+
+.auth-container {
+  width: 300px;
+  margin: 100px auto;
+  padding: 20px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: white;
+}
+
+.auth-container input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+}
+
+.auth-container button {
+  width: 100%;
+  padding: 10px;
+  background: #2c3e50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.auth-container button:hover {
+  background: #1a252f;
 }

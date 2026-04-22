@@ -5,7 +5,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&display=swap'); */
 
-/* light & dark mode colors #596063 */
+/* light & dark mode colors */
 :root {
   --bg-color: white;
   --header-bg: #35495e;
@@ -19,6 +19,8 @@
   --button-hover: #2a3848;
   --delete-btn-bg: #e74c3c;
   --delete-btn-color: white;
+
+  --card: white;
 
   --border-color: #ccc;
   --shadow-color: rgba(0, 0, 0, 0.08);
@@ -126,6 +128,8 @@ body.dark-mode {
   --button-hover: #2c2b2b;
   --delete-btn-bg: #c0392b;
   --delete-btn-color: #fff;
+
+  --card: #859297;
 
   --border-color: #555;
   --shadow-color: rgba(255, 255, 255, 0.1);
@@ -371,7 +375,7 @@ select {
 }
 
 .semester-card {
-  background: var(--white-color);
+  background: var(--card);
   padding: 15px 25px;
   border-radius: 10px;
   box-shadow: 0 4px 12px var(--shadow-color);
@@ -404,7 +408,7 @@ select {
 }
 
 .edit-link {
-  color: #557393;
+  color: #45698f;
   background-color: transparent;
   text-decoration: none;
   font-weight: 500;

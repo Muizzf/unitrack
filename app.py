@@ -117,6 +117,8 @@ def home():
 @app.route("/addSemester", methods=["POST"])
 @login_required
 def add_semester():
+    if is_demo_user():
+        return redirect("/")
     name = request.form["semesterName"]
 
     conn = get_db()
@@ -218,6 +220,8 @@ def edit_semester_page(semester_id):
 @app.route("/updateSemester/<int:semester_id>", methods=["POST"])
 @login_required
 def update_semester(semester_id):
+    if is_demo_user():
+        return redirect("/")
     new_name = request.form["semesterName"]
 
     conn = get_db()
@@ -237,6 +241,8 @@ def update_semester(semester_id):
 @app.route("/deleteSemester/<int:semester_id>", methods=["POST"])
 @login_required
 def delete_semester(semester_id):
+    if is_demo_user():
+        return redirect("/")
     conn = get_db()
     cur = conn.cursor()
 
@@ -253,6 +259,9 @@ def delete_semester(semester_id):
 @app.route("/addTask/<int:semester_id>", methods=["POST"])
 @login_required
 def add_task(semester_id):
+    if is_demo_user():
+        return redirect(f"/semester/{semester_id}")
+    
     course_id = request.form["course_id"]
     title = request.form["title"]
     due_date = request.form["due_date"]
@@ -260,6 +269,8 @@ def add_task(semester_id):
     status = request.form["status"]
     grade = request.form["grade"]
     notes = request.form["notes"]
+    grade = float(grade) if grade else None
+    weight = float(weight) if weight else None
 
     conn = get_db()
     cur = conn.cursor()
@@ -281,6 +292,8 @@ def add_task(semester_id):
 @app.route("/deleteTask/<int:task_id>", methods=["POST"])
 @login_required
 def delete_task(task_id):
+    if is_demo_user():
+        return redirect(request.referrer)
     conn = get_db()
     cur = conn.cursor()
 
@@ -296,6 +309,8 @@ def delete_task(task_id):
 @app.route("/addCourse/<int:semester_id>", methods=["POST"])
 @login_required
 def add_course(semester_id):
+    if is_demo_user():
+        return redirect(f"/semester/{semester_id}")
     name = request.form["courseName"]
 
     conn = get_db()
@@ -316,6 +331,8 @@ def add_course(semester_id):
 @app.route("/deleteCourse/<int:course_id>", methods=["POST"])
 @login_required
 def delete_course(course_id):
+    if is_demo_user():
+        return redirect(request.referrer)
     conn = get_db()
     cur = conn.cursor()
 
@@ -346,6 +363,8 @@ def edit_course(course_id):
 @app.route("/updateCourse/<int:course_id>", methods=["POST"])
 @login_required
 def update_course(course_id):
+    if is_demo_user():
+        return redirect(request.referrer)
     conn = get_db()
     cur = conn.cursor(cursor_factory=RealDictCursor)
 
@@ -395,6 +414,8 @@ def edit_task(task_id):
 @app.route("/updateTask/<int:task_id>", methods=["POST"])
 @login_required
 def update_task(task_id):
+    if is_demo_user():
+        return redirect(request.referrer)
     conn = get_db()
     cur = conn.cursor(cursor_factory=RealDictCursor)
 
@@ -497,6 +518,8 @@ def allowed_file(filename):
 @app.route("/uploadSyllabus", methods=["POST"])
 @login_required
 def upload_syllabus():
+    if is_demo_user():
+        return redirect(request.referrer)
     course_id = request.form["course_id"]
     file = request.files["file"]
 
@@ -547,6 +570,39 @@ def upload_syllabus():
         return redirect(f"/semester/{semester_id}")
 
 
+DEMO_EMAIL = "demo@demo.com"
+def is_demo_user():
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("SELECT email FROM users WHERE id = %s", (current_user.id,))
+    user = cur.fetchone()
+    cur.close()
+    conn.close()
+
+    return user and user[0] == DEMO_EMAIL
+
+
+@app.route("/demo-login")
+def demo_login():
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("SELECT id FROM users WHERE email = %s", ("demo@demo.com",))
+    user = cur.fetchone()
+
+    cur.close()
+    conn.close()
+
+    if not user:
+        return "Demo account not found"
+
+    u = User()
+    u.id = user[0]
+
+    login_user(u)
+
+    return redirect("/")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    #app.run(debug=True)

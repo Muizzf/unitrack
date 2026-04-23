@@ -8,24 +8,34 @@
 <body>
   <header class="main-header">
     <h1>Welcome to UniTrack</h1>
+    <p style="margin-top:5px; font-size:14px; opacity:0.9;">
+      Track your semesters, courses, and assignments in one place
+    </p>
     <button id="darkModeToggle" style="position:absolute; top:20px; right:20px;">🌙</button>
   </header>
-  <div>
-    <div class="auth-container">
-      <h1>Login</h1>
+  <div class="auth-container">
+    <h1>Login</h1>
 
-      <form method="POST" action="/login" >
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Password" required>
+    <form method="POST" action="/login" >
+      <input type="email" name="email" placeholder="Email" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
 
-        <button type="submit">Login</button>
-      </form>
-
-      <p>
-        Don't have an account?
-        <a href="/register" class="edit-link">Register</a>
-      </p>
+    <p style="margin-top:15px; font-size:14px; opacity:0.9;">
+      Don't have an account?
+      <a href="/register" class="edit-link">Register</a>
+    </p>
+    
+    <div class="auth-divider">
+      <span>or</span>
     </div>
+
+    <form action="/demo-login" class="demo-form">
+      <button type="submit" class="demo-btn">
+        Try Demo (No signup required)
+      </button>
+    </form>
   </div>
   <script src="/static/dark-mode.js"></script>
 </body>

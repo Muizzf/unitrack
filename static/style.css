@@ -108,7 +108,7 @@ button,
 input,
 select,
 textarea {
-  border: 1px solid var(--accent-color);
+  border: 1px solid var(--border-color);
   background-color: var(--card-bg);
   color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
@@ -731,14 +731,16 @@ p {
   margin: 100px auto;
   padding: 20px;
   text-align: center;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
   border-radius: 10px;
-  background: white;
+  background: var(--card-bg);
 }
 
 .auth-container input {
-  width: 100%;
-  padding: 10px;
+  width: 90%;
+  border-radius: 8px;
+  padding: 12px;
   margin: 8px 0;
 }
 
@@ -746,6 +748,7 @@ p {
   width: 100%;
   padding: 10px;
   background: #2c3e50;
+  border-radius: 5px;
   color: white;
   border: none;
   cursor: pointer;

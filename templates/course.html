@@ -6,9 +6,13 @@
 <body>
   <header class="main-header">
     <h1>Course Summary - {{ course.name }}</h1>
-    <button id="darkModeToggle" style="position:absolute; top:20px; right:20px;">🌙</button>
+    <button id="darkModeToggle" style="position:absolute;">🌙</button>
   </header>
-  
+
+  <a href="/logout" class="delete-btn logout-btn" style="position:absolute; ">
+    Sign out
+  </a>
+
     <div class="cancel-link-container">
       <a class="back-link" href="javascript:history.back()">⬅ Back</a>
     </div>

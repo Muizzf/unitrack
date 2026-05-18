@@ -436,6 +436,9 @@ def update_task(task_id):
     grade = request.form["grade"]
     notes = request.form["notes"]
 
+    grade = float(grade) if grade else None
+    weight = float(weight) if weight else None
+
     cur.execute("""
         UPDATE tasks
         SET title = %s, due_date = %s, weight = %s, status = %s, grade = %s, notes = %s

@@ -29,48 +29,49 @@
         <span class="stat-value">{{ semester_average | round(2) }}%</span>
       </div>
     </div>
-      <div class="section-header">
-        <h2>Add Course</h2>
-      </div>
-
-    <form class="add-sem" action="/addCourse/{{ semester.id }}" method="POST">
-      <input type="text" name="courseName" placeholder="Course name" required>
-      <button type="submit">Add Course</button>
-    </form>
-
+    
+    
     <div class="section-header">
       <h2>Courses</h2>
     </div>
-
+    
     <ul class="semester-list">
       {% for c in courses %}
-          <li class="semester-item">
-            <div class="semester-card">
-              <a class="semester-name"  href="/course/{{ c.id }}">{{ c.name }}</a>
-              <div class="semester-actions">
-                <a class="edit-link" href="/editCourse/{{ c.id }}">Edit</a>
-
-                <form action="/deleteCourse/{{ c.id }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this course?');">
-                    <button class="delete-btn" type="submit">Delete</button>
-                </form>
+      <li class="semester-item">
+        <div class="semester-card">
+          <a class="semester-name"  href="/course/{{ c.id }}">{{ c.name }}</a>
+          <div class="semester-actions">
+            <a class="edit-link" href="/editCourse/{{ c.id }}">Edit</a>
+            
+            <form action="/deleteCourse/{{ c.id }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this course?');">
+              <button class="delete-btn" type="submit">Delete</button>
+            </form>
               </div>
             </div>
           </li>
-      {% endfor %}
-    </ul>
-
-    
-    <form class="add-sem" method="GET">
-      <select name="sort">
-        <option value="due">Due Date</option>
-        <option value="course">Course</option>
-        <option value="status">Status</option>
-      </select>
-      <button type="submit">Sort</button>
-    </form>
-    
-    <div class="section-header"> 
-      <h2>Tasks</h2>
+          {% endfor %}
+        </ul>
+        
+        <div class="section-header">
+          <h2>Add Course</h2>
+        </div>
+        <form class="add-sem" action="/addCourse/{{ semester.id }}" method="POST">
+          <input type="text" name="courseName" placeholder="Course name" required>
+          <button type="submit">Add Course</button>
+        </form>
+        
+        <div class="horizontal-divider"></div>
+        
+        <div class="section-header left-align sort"> 
+          <h2>Tasks</h2>
+          <form class="sort-form" method="GET">
+            <select name="sort">
+              <option value="due">Due Date</option>
+              <option value="course">Course</option>
+              <option value="status">Status</option>
+            </select>
+            <button class="btn" type="submit">Sort</button>
+      </form>
     </div>
     
   {% if tasks %}
@@ -121,8 +122,9 @@
     <p>No tasks yet.</p>
   {% endif %}
 
+<div class="horizontal-divider"></div>
 
-  <div class="section-header">
+  <div class="section-header left-align">
     <h2>Add Task</h2>
   </div>
 
@@ -147,19 +149,41 @@
 
     <button type="submit">Add Task</button>
   </form>
-  <div class="section-header">
-    <h2 >Upload Syllabus PDF</h2>
+
+  <div class="horizontal-divider"></div>
+
+  <div class="upload-section-container">
+  <div class="section-header left-align">
+    <h2>Upload Syllabus PDF</h2>
   </div>
-    <form class="upload-syllabus-form" action="/uploadSyllabus" method="post" enctype="multipart/form-data">
-      <select name="course_id" required>
-          {% for c in courses %}
-            <option value="{{ c.id }}">{{ c.name }}</option>
-          {% endfor %}
-      </select>
-      <input type="file" name="file" accept=".pdf" required>
-      <input type="submit" value="Upload and Parse">
+  
+  <form class="upload-syllabus-form" action="/uploadSyllabus" method="post" enctype="multipart/form-data">
+    <select name="course_id" required class="syllabus-field-half">
+      {% for c in courses %}
+        <option value="{{ c.id }}">{{ c.name }}</option>
+      {% endfor %}
+    </select>
+    
+    <div class="syllabus-field-half file-input-wrapper">
+      <label for="syllabus-file" class="custom-file-upload">
+        <span class="upload-icon">📄</span> <span id="file-chosen-text">Choose Syllabus PDF</span>
+      </label>
+      <input type="file" id="syllabus-file" name="file" accept=".pdf" required onchange="updateFileName(this)">
+    </div>
+    
+    <input type="submit" value="Upload and Parse" class="syllabus-submit-full">
   </form>
 </div>
 <script src="/static/dark-mode.js"></script>
+<script>
+    function updateFileName(input) {
+      const textSpan = document.getElementById('file-chosen-text');
+      if (input.files && input.files.length > 0) {
+        textSpan.textContent = input.files[0].name;
+      } else {
+        textSpan.textContent = "Choose Syllabus PDF";
+      }
+    }
+  </script>
 </body>
 </html>

@@ -419,6 +419,8 @@ select {
   justify-content: space-between;
   align-items: center;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  
 }
 
 .semester-card:hover {
@@ -430,17 +432,18 @@ select {
   font-size: 18px;
   font-weight: 600;
   color: #35495e;
-  text-decoration: none;
-}
-
-.semester-name:hover {
-  text-decoration: underline;
 }
 
 .semester-actions {
   display: flex;
   gap: 15px;
   align-items: center;
+}
+
+.semester-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
 }
 
 .edit-link {
